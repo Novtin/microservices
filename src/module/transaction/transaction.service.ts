@@ -20,7 +20,7 @@ import { KafkaService } from '../../config/kafka/kafka.service';
 export class TransactionService {
   constructor(
     private readonly transactionRepository: TransactionRepository,
-    //@InjectDataSource() private readonly dataSource: DataSource,
+    @InjectDataSource() private readonly dataSource: DataSource,
     private readonly internalAccountService: InternalAccountService,
     private readonly kafkaService: KafkaService,
   ) {}
@@ -52,8 +52,8 @@ export class TransactionService {
     params: CreateTransactionDto,
   ): Promise<void> {
     const { userId, amount, transactionType, recipient } = params;
-    // const queryRunner = this.dataSource.createQueryRunner();
-    // await queryRunner.startTransaction('SERIALIZABLE');
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.startTransaction('SERIALIZABLE');
     const transWithdrawl = await this.transactionRepository.creteTransaction({
       userId,
       amount: '-' + amount,
@@ -87,8 +87,8 @@ export class TransactionService {
       eventName: EventNameEnum.TransactionSaved,
       data: dataDeposit,
     });
-    // await queryRunner.commitTransaction();
-    // await queryRunner.release();
+    await queryRunner.commitTransaction();
+    await queryRunner.release();
   }
 
   async updateStatus(params: EventBalanceChangedData): Promise<void> {
