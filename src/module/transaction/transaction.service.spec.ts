@@ -7,8 +7,6 @@ import { mock } from 'jest-mock-extended';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionType } from './transaction.types';
 import { TransactionEntity } from './entities/transaction.entity';
-import { DataSource } from 'typeorm';
-import { getDataSourceToken } from '@nestjs/typeorm';
 
 describe('TransactionService', () => {
   let transactionService: TransactionService;
@@ -24,10 +22,6 @@ describe('TransactionService', () => {
           useValue: {
             createTransaction: jest.fn(),
           },
-        },
-        {
-          provide: getDataSourceToken(),
-          useValue: DataSource,
         },
         {
           provide: InternalAccountService,
