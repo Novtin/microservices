@@ -5,11 +5,9 @@ import {
   Param,
   Post,
   Query,
-  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionDto } from './dto/transaction.dto';
@@ -26,7 +24,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  async crete(@Body() dto: CreateTransactionDto): Promise<void> {
+  async create(@Body() dto: CreateTransactionDto): Promise<void> {
     return await this.transactionService.create(dto);
   }
 

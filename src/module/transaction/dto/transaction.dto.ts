@@ -1,8 +1,7 @@
-import { TransactionType } from '../transaction.types';
+import { TransactionStatus, TransactionType } from '../transaction.types';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { Expose, plainToInstance } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { TransactionEntity } from '../entities/transaction.entity';
 
 export class TransactionDto {
   @ApiProperty({
@@ -39,9 +38,13 @@ export class TransactionDto {
   @IsOptional()
   type?: TransactionType;
 
-  constructor(entity: Partial<TransactionEntity>) {
-    return plainToInstance(TransactionDto, entity, {
-      excludeExtraneousValues: true,
-    });
-  }
+  @ApiProperty({
+    description: 'Статус транзакции',
+    required: false,
+    enum: TransactionStatus,
+  })
+  @IsEnum(TransactionStatus)
+  @Expose()
+  @IsOptional()
+  status?: TransactionStatus;
 }

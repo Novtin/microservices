@@ -1,3 +1,3 @@
-import { InitTransaction1718800588979 } from './1718800588979-InitTransaction';
+import { AddStatus1718955580471 } from './1718955580471-AddStatus';
 
-export default [InitTransaction1718800588979];
+export default [AddStatus1718955580471];

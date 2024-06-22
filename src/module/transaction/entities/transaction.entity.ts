@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { AbstractEntity } from '../../database/abstract.entity';
-import { TransactionType } from '../transaction.types';
+import { TransactionStatus, TransactionType } from "../transaction.types";
 
 @Entity({
   name: 'transaction_table',
@@ -33,4 +33,13 @@ export class TransactionEntity extends AbstractEntity {
     enum: TransactionType,
   })
   type: TransactionType;
+
+  @Column('enum', {
+    name: 'status',
+    comment: 'Статус транзакции',
+    nullable: false,
+    enum: TransactionStatus,
+    default: TransactionStatus.INPROGRESS,
+  })
+  status?: TransactionStatus;
 }

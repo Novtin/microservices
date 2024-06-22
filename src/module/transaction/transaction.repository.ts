@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository, SelectQueryBuilder } from 'typeorm';
 import { TransactionEntity } from './entities/transaction.entity';
-import { FindTransactionParams } from './transaction.types';
+import { FindTransactionParams, TransactionStatus } from './transaction.types';
 import { TransactionDto } from './dto/transaction.dto';
 
 export class TransactionRepository {
@@ -14,6 +14,13 @@ export class TransactionRepository {
     entity: T,
   ): Promise<TransactionEntity> {
     return this.transactionRepository.save(entity);
+  }
+
+  async updateStatus(
+    transactionId: string,
+    status: TransactionStatus,
+  ): Promise<void> {
+    await this.transactionRepository.update({ transactionId }, { status });
   }
 
   async findById(id: string) {
@@ -33,7 +40,8 @@ export class TransactionRepository {
   ): SelectQueryBuilder<TransactionEntity> {
     console.log(params);
     const query = this.transactionRepository.createQueryBuilder(alias);
-    const { userIds, transactionIds, amounts, type, take, skip } = params;
+    const { userIds, transactionIds, amounts, type, take, skip, status } =
+      params;
     if (userIds?.length) {
       query.andWhere(`${alias}.userId in (:...userIds)`, { userIds });
     }
@@ -47,6 +55,10 @@ export class TransactionRepository {
     }
     if (type) {
       query.andWhere(`${alias}.type = :type`, { type });
+    }
+
+    if (status) {
+      query.andWhere(`${alias}.status = :status`, { status });
     }
     if (take) {
       query.take(take);
